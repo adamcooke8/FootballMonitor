@@ -1,17 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using AutoMapper.Configuration;
+using FootballMonitor.Infrastructure;
+using FootballMonitor.Interfaces;
+using FootballMonitor.Services;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using PullRequestMonitor.Infrastructure;
-using PullRequestMonitor.Interfaces;
-using PullRequestMonitor.Mapping;
-using PullRequestMonitor.Services;
 
 namespace FootballMonitor
 {
-    [ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -25,11 +19,10 @@ namespace FootballMonitor
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddTransient<IAzureRequest, AzureRequest>();
-            services.AddTransient<IPullRequestMap, PullRequestMap>();
-            services.AddTransient<IPullRequestService, PullRequestService>();
+            services.AddTransient<IApiRequest, ApiRequest>();
+            services.AddTransient<IFootballMonitorService, FootballMonitorService>();
 
-            services.AddHttpClient<IAzureRequest, AzureRequest>();
+            services.AddHttpClient<IApiRequest, ApiRequest>();
             services.AddControllersWithViews().AddViewComponentsAsServices().AddNewtonsoftJson();
             services.AddMvc();
         }
@@ -58,7 +51,7 @@ namespace FootballMonitor
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=PullRequest}/{action=Index}/{id?}");
+                    pattern: "{controller=FootballMonitor}/{action=Index}/{id?}");
             });
         }
     }

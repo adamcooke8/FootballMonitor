@@ -1,11 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace FootballMonitor.Views.FootballMonitor
-{
-	public class index
-	{
-	}
+﻿@using System.Linq
+@model IEnumerable<ApiResponseDto>
+@{
+	ViewData["Title"] = "Index";
 }
+
+<table class="table table-bordered table-condensed table-hover table-striped">
+	<thead>
+		<tr>
+			<th>PullRequestId</th>
+			<th scope="col">Avatar</th>
+			<th>Title</th>
+			<th>Description</th>
+			<th scope="col">Comment Count</th>
+			<th>Repository</th>
+			<th>Branch</th>
+			<th>CreatedBy</th>
+			<th>CreationDate</th>
+			<th>Age</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@foreach (var pullRequest in Model)
+		{
+			<tr @(pullRequest.Age.Days <= -2 ? "style=background-color:white" : "")>
+				<td><a href="https://dev.azure.com/FenergoProduct/DigitalPlatform/_git/@pullRequest.Repository.Name/pullrequest/@pullRequest.PullRequestId">@pullRequest.PullRequestId</a></td>
+				<td>
+					@if (string.IsNullOrWhiteSpace(pullRequest.AvatarImage))
+					{
+						<img src="img/placeholder.jfif" alt="image" />
+					}
+					else
+					{
+						<img src="@pullRequest.AvatarImage" alt="Image" />
+					}
+				</td>
+				<td>@pullRequest.Title</td>
+				<td>@pullRequest.Description</td>
+				<td>@pullRequest.CommentCount</td>
+				<td>@pullRequest.Repository.Name</td>
+				<td>@pullRequest.Branch</td>
+				<td>@pullRequest.CreatedBy.DisplayName</td>
+				<td>@pullRequest.CreationDate</td>
+				<td>@string.Format("{0:dd\\.hh\\:mm\\:ss} days", @pullRequest.Age)</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+
